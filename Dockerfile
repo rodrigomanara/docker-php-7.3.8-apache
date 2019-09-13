@@ -35,6 +35,19 @@ RUN docker-php-ext-install calendar && docker-php-ext-configure calendar
 RUN apt-get install git -y
 RUN docker-php-ext-install opcache
 
+# Install Xdebug
+RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.5.1.tgz' -o xdebug.tar.gz
+RUN ls
+RUN mkdir -p xdebug
+RUN tar -xf xdebug.tar.gz -C xdebug --strip-components=1
+RUN rm xdebug.tar.gz
+RUN mkdir test4
+RUN	cd xdebug && phpize && ./configure --enable-xdebug && make -j$(nproc) && make install
+
+RUN rm -r xdebug \
+    && docker-php-ext-enable xdebug
+
+
 RUN apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
